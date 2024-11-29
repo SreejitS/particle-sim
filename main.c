@@ -1,53 +1,17 @@
-#include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
+#include <GLFW/glfw3.h>
 
+#include "platform.h"
 #include "particles.h"
 
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        switch (key) {
-            case GLFW_KEY_RIGHT:
-                printf("Right Arrow Key Pressed - Positive X Acceleration\n");
-                break;
-            case GLFW_KEY_LEFT:
-                printf("Left Arrow Key Pressed - Negative X Acceleration\n");
-                break;
-            case GLFW_KEY_UP:
-                printf("Up Arrow Key Pressed - Positive Y Acceleration\n");
-                break;
-            case GLFW_KEY_DOWN:
-                printf("Down Arrow Key Pressed - Negative Y Acceleration\n");
-                break;
-            default:
-                break;
-        }
-    }
-}
-
 int main() {
-    if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW\n");
+
+    if (!platform_init()) {
         return -1;
     }
-
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Particle Simulation with Collisions", NULL, NULL);
-    if (!window) {
-        fprintf(stderr, "Failed to open GLFW window\n");
-        glfwTerminate();
-        return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, key_callback); // Set the key callback for detecting key presses
-    glPointSize(10.0f); // Set particle size
-
-    // Initialize random seed
-    srand(time(NULL));
-
+    
     // Create an array of NUM_OF_PARTICLES particles
     Particle particles[NUM_OF_PARTICLES];
     for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
@@ -57,15 +21,10 @@ int main() {
     float ax = 0.0f; // Global x-axis acceleration
     float ay = -0.1f; // Global y-axis acceleration (gravity)
 
-    while (!glfwWindowShouldClose(window)) {
-        // Handle input for acceleration
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) ax = 0.8f;
-        else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) ax = -0.8f;
-        else ax = 0.0f;
+    while (!platform_should_terminate()) {
 
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) ay = 0.8f;
-        else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) ay = -0.8f;
-
+        platform_update_global_acceleration(&ax, &ay);
+        
         // Update particles with the global acceleration
         float time = glfwGetTime();
         static float lastTime = 0.0f;
@@ -89,19 +48,16 @@ int main() {
             }
         }
 
-
-        // Render
-        glClear(GL_COLOR_BUFFER_BIT);
-        glLoadIdentity();
+        platform_clear_display();
 
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
-            draw_particle(&particles[i]);
+            platform_draw_particle(&particles[i]);
         }
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        platform_update_display();
+        platform_poll_events();
     }
 
-    glfwTerminate();
+    platform_terminate();
     return 0;
 }

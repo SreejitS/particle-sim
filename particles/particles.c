@@ -1,5 +1,15 @@
 #include "particles.h"
 
+void initialize_particle(Particle* p) {
+    p->x = (float)(rand() % 200 - 100) / 100.0f; // Random x between -1.0 and 1.0
+    p->y = (float)(rand() % 200 - 100) / 100.0f; // Random y between -1.0 and 1.0
+    p->vx = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
+    p->vy = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
+    p->ax = 0.0f;  // No acceleration by default
+    p->ay = -0.1f; // Gravity-like acceleration
+    p->radius = 0.025f; // Fixed radius for all particles
+}
+
 void update_particle(Particle* p, float dt) {
     // Update velocity using acceleration
     p->vx += p->ax * dt;
@@ -53,17 +63,3 @@ void check_collision(Particle* p1, Particle* p2, float restitution) {
     }
 }
 
-
-void draw_particle(Particle* p) {
-    platform_draw(p);
-}
-
-void initialize_particle(Particle* p) {
-    p->x = (float)(rand() % 200 - 100) / 100.0f; // Random x between -1.0 and 1.0
-    p->y = (float)(rand() % 200 - 100) / 100.0f; // Random y between -1.0 and 1.0
-    p->vx = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
-    p->vy = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
-    p->ax = 0.0f;  // No acceleration by default
-    p->ay = -0.1f; // Gravity-like acceleration
-    p->radius = 0.025f; // Fixed radius for all particles
-}

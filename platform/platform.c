@@ -1,0 +1,92 @@
+#include <GLFW/glfw3.h>
+#include "platform.h"
+
+static GLFWwindow* window = NULL;
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    (void) window;
+    (void) scancode;
+    (void) mods;
+    
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        switch (key) {
+            case GLFW_KEY_RIGHT:
+                printf("Right Arrow Key Pressed - Positive X Acceleration\n");
+                break;
+            case GLFW_KEY_LEFT:
+                printf("Left Arrow Key Pressed - Negative X Acceleration\n");
+                break;
+            case GLFW_KEY_UP:
+                printf("Up Arrow Key Pressed - Positive Y Acceleration\n");
+                break;
+            case GLFW_KEY_DOWN:
+                printf("Down Arrow Key Pressed - Negative Y Acceleration\n");
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+bool platform_init() {
+    if (!glfwInit()) {
+        fprintf(stderr, "Failed to initialize GLFW\n");
+        return false;
+    }
+
+    window = glfwCreateWindow(800, 600, "Particle Simulation with Collisions", NULL, NULL);
+    if (!window) {
+        fprintf(stderr, "Failed to open GLFW window\n");
+        glfwTerminate();
+        return false;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    glfwSetKeyCallback(window, key_callback); // Set the key callback for detecting key presses
+    glPointSize(10.0f); // Set particle size
+
+    // Initialize random seed
+    srand(time(NULL));
+
+    return true;
+}
+
+void platform_update_global_acceleration(float *ax, float *ay) {
+    // Handle input for acceleration
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) *ax = 0.8f;
+    else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) *ax = -0.8f;
+    else *ax = 0.0f;
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) *ay = 0.8f;
+    else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) *ay = -0.8f;
+    else *ay = 0.0f;
+}
+
+void platform_draw_particle(Particle* p) {
+    glBegin(GL_POINTS);
+    glVertex2f(p->x, p->y);
+    glEnd();
+}
+
+bool platform_should_terminate() {
+    return glfwWindowShouldClose(window);
+}
+
+void platform_clear_display() {
+    // Render
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+}
+
+void platform_update_display() {
+    glfwSwapBuffers(window);
+}
+
+void platform_poll_events() {
+    glfwPollEvents();
+}
+
+void platform_terminate() {
+    glfwTerminate();
+}
