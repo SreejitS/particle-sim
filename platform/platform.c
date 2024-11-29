@@ -52,6 +52,20 @@ bool platform_init() {
     return true;
 }
 
+void platform_poll_events() {
+    glfwPollEvents();
+}
+
+float platform_get_time() {
+    return glfwGetTime();
+}
+
+void platform_draw_particle(Particle* p) {
+    glBegin(GL_POINTS);
+    glVertex2f(p->x, p->y);
+    glEnd();
+}
+
 void platform_update_global_acceleration(float *ax, float *ay) {
     // Handle input for acceleration
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) *ax = 0.8f;
@@ -61,12 +75,6 @@ void platform_update_global_acceleration(float *ax, float *ay) {
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) *ay = 0.8f;
     else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) *ay = -0.8f;
     else *ay = 0.0f;
-}
-
-void platform_draw_particle(Particle* p) {
-    glBegin(GL_POINTS);
-    glVertex2f(p->x, p->y);
-    glEnd();
 }
 
 bool platform_should_terminate() {
@@ -81,10 +89,6 @@ void platform_clear_display() {
 
 void platform_update_display() {
     glfwSwapBuffers(window);
-}
-
-void platform_poll_events() {
-    glfwPollEvents();
 }
 
 void platform_terminate() {

@@ -32,7 +32,7 @@ typedef struct {
  *
  * @param p Pointer to the Particle to be initialized.
  */
-void initialize_particle(Particle* p);
+void particle_init(Particle* p);
 
 /**
  * @brief Updates the position and velocity of a particle based on its acceleration.
@@ -43,7 +43,7 @@ void initialize_particle(Particle* p);
  * @param p Pointer to the Particle to be updated.
  * @param dt Time step (delta time) for the update.
  */
-void update_particle(Particle* p, float dt);
+void particle_update(Particle* p, float dt);
 
 /**
  * @brief Checks and resolves collisions between two particles.
@@ -56,18 +56,6 @@ void update_particle(Particle* p, float dt);
  * @param p2 Pointer to the second particle.
  * @param restitution The coefficient of restitution (0 = perfectly inelastic, 1 = elastic).
  */
-void check_collision(Particle* p1, Particle* p2, float restitution);
-
-/**
- * @brief Draws a particle on the screen.
- * 
- * This function renders a single particle as a point.
- * Uses platform specific function to render the particle
- *
- * @param p Pointer to the Particle to be drawn.
- */
-void draw_particle(Particle* p);
-
-
+void particle_check_collision(Particle* p1, Particle* p2, float restitution);
 
 #endif // PARTICLES_H

@@ -1,6 +1,6 @@
 #include "particles.h"
 
-void initialize_particle(Particle* p) {
+void particle_init(Particle* p) {
     p->x = (float)(rand() % 200 - 100) / 100.0f; // Random x between -1.0 and 1.0
     p->y = (float)(rand() % 200 - 100) / 100.0f; // Random y between -1.0 and 1.0
     p->vx = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
@@ -10,7 +10,7 @@ void initialize_particle(Particle* p) {
     p->radius = 0.025f; // Fixed radius for all particles
 }
 
-void update_particle(Particle* p, float dt) {
+void particle_update(Particle* p, float dt) {
     // Update velocity using acceleration
     p->vx += p->ax * dt;
     p->vy += p->ay * dt;
@@ -30,7 +30,7 @@ void update_particle(Particle* p, float dt) {
     }
 }
 
-void check_collision(Particle* p1, Particle* p2, float restitution) {
+void particle_check_collision(Particle* p1, Particle* p2, float restitution) {
     // Calculate distance between two particles
     float dx = p1->x - p2->x;
     float dy = p1->y - p2->y;
