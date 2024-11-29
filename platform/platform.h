@@ -27,7 +27,8 @@ void platform_poll_events();
 /**
  * @brief This function returns the current GLFW time, in seconds.
  * 
- * @return time in float
+ * @return The current time, in seconds, or zero if an
+ *  error occurred.
  */
 
 float platform_get_time();
