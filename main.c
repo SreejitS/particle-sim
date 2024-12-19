@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <GLFW/glfw3.h>
 
 #include "platform.h"
 #include "particles.h"
