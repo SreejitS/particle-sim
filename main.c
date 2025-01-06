@@ -18,7 +18,7 @@ int main() {
     }
 
     float ax = 0.0f; // Global x-axis acceleration
-    float ay = -0.1f; // Global y-axis acceleration (gravity)
+    float ay = -0.9f; // Global y-axis acceleration (gravity)
 
     while (!platform_should_terminate()) {
 

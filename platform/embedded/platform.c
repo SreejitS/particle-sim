@@ -1,9 +1,10 @@
 #include "platform.h"
 #include "display.h"
+#include "pico/rand.h"
 
 bool platform_init() {
     display_init();
-    srand(time(NULL));
+    srand( get_rand_32() );
     return true;
 }
 
