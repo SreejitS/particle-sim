@@ -5,3 +5,4 @@ platform/embedded/build
 particles_EMBEDDED
 particles_HOST
 platform/embedded/picotool/
+.vscode/

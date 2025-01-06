@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "particles.h": "c"
-    },
-    "cmake.sourceDirectory": "/home/enigma/particle_sim/platform/embedded"
-}
