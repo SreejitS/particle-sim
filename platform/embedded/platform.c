@@ -1,6 +1,9 @@
 #include "platform.h"
+#include "display.h"
 
 bool platform_init() {
+    display_init();
+    srand(time(NULL));
     return true;
 }
 
@@ -12,13 +15,14 @@ float platform_get_time() {
 }
 
 void platform_draw_particle(Particle* p) {
+    display_point(p->x, p->y);
 }
 
 void platform_update_global_acceleration(float *ax, float *ay) {
 }
 
 bool platform_should_terminate() {
-    return true;
+    return false;
 }
 
 void platform_clear_display() {

@@ -1,1 +1,7 @@
-particles/particles.o
+*/*.o
+*/*.d
+**/build/**
+platform/embedded/build
+particles_EMBEDDED
+particles_HOST
+platform/embedded/picotool/

@@ -4,7 +4,7 @@ BUILD ?= DEBUG
 
 # Compiler and flags for HOST
 CC_HOST = gcc
-CFLAGS_COMMON = -Wall -Wextra -I. -I./platform/host -I./platform/embedded -I./particles
+CFLAGS_COMMON = -Wall -Wextra -I. -I./platform/host -I./platform/embedded -I./particles -I/platform/embedded/display
 LDFLAGS_COMMON =
 
 ifeq ($(BUILD), DEBUG)
@@ -25,7 +25,10 @@ else ifeq ($(TARGET), EMBEDDED)
     ifndef PICO_SDK_PATH
         $(error PICO_SDK_PATH is not set. Please export PICO_SDK_PATH to the Pico SDK path.)
     endif
+    CROSS_COMPILE = arm-none-eabi-
     BUILD_DIR = platform/embedded/build
+    ELF_FILE = $(BUILD_DIR)/particles.elf
+    BIN_FILE = $(BUILD_DIR)/particles.bin  # .bin extension for flashing
 else
     $(error Unknown target '$(TARGET)'. Supported targets: HOST, EMBEDDED)
 endif
@@ -60,10 +63,15 @@ $(OUTPUT): $(OBJS)
 else ifeq ($(TARGET), EMBEDDED)
 $(OUTPUT):
 	$(Q)mkdir -p $(BUILD_DIR)
-	$(Q)cd $(BUILD_DIR) && cmake -DPICO_SDK_PATH=$(PICO_SDK_PATH) ..
+	$(Q)cd $(BUILD_DIR) && cmake -DPICO_SDK_PATH=$(PICO_SDK_PATH) -DPICO_BOARD=pico_w ..
 	$(Q)cd $(BUILD_DIR) && $(MAKE)
-	$(Q)cp $(BUILD_DIR)/particles.elf $(OUTPUT)
+	$(Q)$(CROSS_COMPILE)objcopy -O binary $(ELF_FILE) $(BIN_FILE)  # Convert ELF to BIN
+	$(Q)cp $(BIN_FILE) $(OUTPUT)
 endif
+
+# Flash the RP2040 using pyOCD
+flash: $(BIN_FILE)
+	$(Q)pyocd flash -t rp2040 $(BIN_FILE)
 
 run: $(OUTPUT)
 ifeq ($(TARGET), HOST)
@@ -73,9 +81,7 @@ else
 endif
 
 clean:
-	$(Q)rm -f $(OBJS) $(OUTPUT) $(SRCS:.c=.d)
-ifeq ($(TARGET), EMBEDDED)
 	$(Q)rm -rf $(BUILD_DIR)
-endif
+	$(Q)rm -f $(OUTPUT) $(OBJS) $(SRCS:.c=.d)
 
-.PHONY: all clean run
+.PHONY: all clean run flash
