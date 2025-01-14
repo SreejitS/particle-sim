@@ -43,7 +43,7 @@ int main() {
 
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
             for (int j = i + 1; j < NUM_OF_PARTICLES; ++j) {
-                // particle_check_collision(&particles[i], &particles[j], restitution);
+                particle_check_collision(&particles[i], &particles[j], restitution);
             }
         }
 
