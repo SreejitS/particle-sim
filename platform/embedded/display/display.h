@@ -28,5 +28,9 @@ void display_point(float x, float y);
  */
 void display_clear();
 
+/**
+ * @brief Updates the display
+ */
+void display_update();
 
 #endif // DISPLAY_H

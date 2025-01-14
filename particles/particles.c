@@ -7,7 +7,7 @@ void particle_init(Particle* p) {
     p->vy = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
     p->ax = 0.0f;  // No acceleration by default
     p->ay = -0.1f; // Gravity-like acceleration
-    p->radius = 0.025f; // Fixed radius for all particles
+    p->radius = 0.05f; // Fixed radius for all particles
 }
 
 void particle_update(Particle* p, float dt) {

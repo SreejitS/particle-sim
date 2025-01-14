@@ -6,3 +6,7 @@ particles_EMBEDDED
 particles_HOST
 platform/embedded/picotool/
 .vscode/
+main.d
+main.o
+platform/host/platform.d
+platform/host/platform.o

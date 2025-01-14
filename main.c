@@ -36,7 +36,7 @@ int main() {
             particles[i].ay = ay;
 
             // Update particle based on acceleration
-            // particle_update(&particles[i], deltaTime);
+            particle_update(&particles[i], deltaTime);
         }
 
         float restitution = 0.9f; // Set restitution to 0.8 for some energy loss

@@ -1,6 +1,7 @@
 #include "platform.h"
 #include "display.h"
 #include "pico/rand.h"
+#include "pico/stdlib.h"
 
 bool platform_init() {
     display_init();
@@ -12,7 +13,7 @@ void platform_poll_events() {
 }
 
 float platform_get_time() {
-    return 1.00;
+    return time_us_64() / 1000000.0f;
 }
 
 void platform_draw_particle(Particle* p) {
@@ -27,9 +28,11 @@ bool platform_should_terminate() {
 }
 
 void platform_clear_display() {
+    display_clear();
 }
 
 void platform_update_display() {
+    display_update();
 }
 
 void platform_terminate() {

@@ -43,4 +43,12 @@ void ssd1306_draw_pixel(float x, float y);
  */
 void ssd1306_clear();
 
+/**
+ * @brief Renders the current frame buffer to the SSD1306 display.
+ * 
+ * This function updates the display with the contents of the frame buffer.
+ * It should be called after drawing any graphics to the display.
+ */
+void ssd1306_render();
+
 #endif // SSD1306_DRIVER_H

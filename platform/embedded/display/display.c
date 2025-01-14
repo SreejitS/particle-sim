@@ -18,4 +18,8 @@ void display_clear() {
     ssd1306_clear();
 }
 
+void display_update() {
+    ssd1306_render();
+}
+
 

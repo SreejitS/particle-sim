@@ -263,6 +263,9 @@ bool ssd1306_driver_init() {
 
 void ssd1306_draw_pixel(float x, float y) {
     SetPixel(buf, x, y, true);
+}
+
+void ssd1306_render() {
     render(buf, &frame_area);
 }
 
