@@ -18,7 +18,7 @@ int main() {
     }
 
     float ax = 0.0f; // Global x-axis acceleration
-    float ay = -0.9f; // Global y-axis acceleration (gravity)
+    float ay = 0.0f; // Global y-axis acceleration (gravity)
 
     while (!platform_should_terminate()) {
 
@@ -39,7 +39,7 @@ int main() {
             particle_update(&particles[i], deltaTime);
         }
 
-        float restitution = 0.9f; // Set restitution to 0.8 for some energy loss
+        float restitution = 0.8f; // Set restitution to 0.8 for some energy loss
 
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
             for (int j = i + 1; j < NUM_OF_PARTICLES; ++j) {

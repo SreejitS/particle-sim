@@ -1,11 +1,13 @@
 #include "platform.h"
 #include "display.h"
+#include "mpu6050.h"
 #include "pico/rand.h"
 #include "pico/stdlib.h"
 
 bool platform_init() {
     display_init();
     srand( get_rand_32() );
+    imu_init();
     return true;
 }
 
@@ -21,6 +23,7 @@ void platform_draw_particle(Particle* p) {
 }
 
 void platform_update_global_acceleration(float *ax, float *ay) {
+    imu_read(ax, ay);
 }
 
 bool platform_should_terminate() {

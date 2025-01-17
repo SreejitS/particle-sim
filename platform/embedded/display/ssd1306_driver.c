@@ -23,20 +23,10 @@
 
    You will need to use a level shifter on the I2C lines if you want to run the
    board at 5v.
-
-   Connections on Raspberry Pi Pico board, other boards may vary.
-
-   GPIO PICO_DEFAULT_I2C_SDA_PIN (on Pico this is GP4 (pin 6)) -> SDA on display
-   board
-   GPIO PICO_DEFAULT_I2C_SCL_PIN (on Pico this is GP5 (pin 7)) -> SCL on
-   display board
-   3.3v (pin 36) -> VCC on display board
-   GND (pin 38)  -> GND on display board
 */
 
-#define i2c_default                 i2c1    // Use I2C1 since GP14 and GP15 are associated with it
-#define PICO_DEFAULT_I2C_SDA_PIN    14      // GP14 for SDA
-#define PICO_DEFAULT_I2C_SCL_PIN    15      // GP15 for SCL
+#define SSD1306_I2C_SDA_PIN    14      // GP14 for SDA
+#define SSD1306_I2C_SCL_PIN    15      // GP15 for SCL
 
 #define SSD1306_I2C_ADDR            _u(0x3C)
 
@@ -106,14 +96,12 @@ static void calc_render_area_buflen(struct render_area *area) {
     area->buflen = (area->end_col - area->start_col + 1) * (area->end_page - area->start_page + 1);
 }
 
-#ifdef i2c_default
-
 static void SSD1306_send_cmd(uint8_t cmd) {
     // I2C write process expects a control byte followed by data
     // this "data" can be a command or data to follow up a command
     // Co = 1, D/C = 0 => the driver expects a command
     uint8_t buf[2] = {0x80, cmd};
-    i2c_write_blocking(i2c_default, SSD1306_I2C_ADDR, buf, 2, false);
+    i2c_write_blocking(i2c1, SSD1306_I2C_ADDR, buf, 2, false);
 }
 
 static void SSD1306_send_cmd_list(uint8_t *buf, int num) {
@@ -134,7 +122,7 @@ static void SSD1306_send_buf(uint8_t buf[], int buflen) {
     temp_buf[0] = 0x40;
     memcpy(temp_buf+1, buf, buflen);
 
-    i2c_write_blocking(i2c_default, SSD1306_I2C_ADDR, temp_buf, buflen + 1, false);
+    i2c_write_blocking(i2c1, SSD1306_I2C_ADDR, temp_buf, buflen + 1, false);
 
     free(temp_buf);
 }
@@ -228,28 +216,27 @@ static void SetPixel(uint8_t *buf, int x,int y, bool on) {
 
     buf[byte_idx] = byte;
 }
-#endif
 
 bool ssd1306_driver_init() {
     stdio_init_all();
 
-#if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
+#if !defined(i2c1) || !defined(SSD1306_I2C_SDA_PIN) || !defined(SSD1306_I2C_SCL_PIN)
 #warning i2c / SSD1306_i2d example requires a board with I2C pins
     puts("Default I2C pins were not defined");
 #else
     // useful information for picotool
-    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
+    bi_decl(bi_2pins_with_func(SSD1306_I2C_SDA_PIN, SSD1306_I2C_SCL_PIN, GPIO_FUNC_I2C));
     bi_decl(bi_program_description("SSD1306 OLED driver I2C example for the Raspberry Pi Pico"));
 
     printf("Hello, SSD1306 OLED display! Look at my raspberries..\n");
 
     // I2C is "open drain", pull ups to keep signal high when no data is being
     // sent
-    i2c_init(i2c_default, SSD1306_I2C_CLK * 1000);
-    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
-    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
+    i2c_init(i2c1, SSD1306_I2C_CLK * 1000);
+    gpio_set_function(SSD1306_I2C_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(SSD1306_I2C_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(SSD1306_I2C_SDA_PIN);
+    gpio_pull_up(SSD1306_I2C_SCL_PIN);
 
     // run through the complete initialization process
     SSD1306_init();
