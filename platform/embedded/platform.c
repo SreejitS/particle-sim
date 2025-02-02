@@ -1,6 +1,7 @@
 #include "platform.h"
 #include "display.h"
 #include "mpu6050.h"
+#include "imu.h"
 #include "pico/rand.h"
 #include "pico/stdlib.h"
 

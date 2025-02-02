@@ -11,8 +11,8 @@ add_executable(particles
   ../../platform/embedded/platform.c
   display/display.c
   display/ssd1306_driver.c
-  imu/imu.c
   imu/mpu6050.c
+  imu/imu.c
 )
 
 # Include directories

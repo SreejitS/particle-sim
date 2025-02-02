@@ -1,4 +1,3 @@
-#include "mpu6050.h"
 #include "imu.h"
 #include <stdio.h>
 

@@ -15,29 +15,45 @@ else
     $(error Unknown build configuration '$(BUILD)'. Supported: DEBUG, RELEASE)
 endif
 
+# Set up build directories
+BUILD_DIR_HOST = build
+BUILD_DIR_EMBEDDED = platform/embedded/build
+
+# Pico SDK path
+PICO_SDK_PATH = platform/embedded/pico-sdk
+
+# Check if Pico SDK exists, clone if not
+ifeq ($(TARGET), EMBEDDED)
+    ifeq ($(wildcard $(PICO_SDK_PATH)/CMakeLists.txt),)
+        $(info Pico SDK not found. Cloning into $(PICO_SDK_PATH)...)
+        $(shell mkdir -p $(PICO_SDK_PATH))
+        $(shell git clone https://github.com/raspberrypi/pico-sdk.git $(PICO_SDK_PATH))
+        $(shell git -C $(PICO_SDK_PATH) submodule update --init)
+    endif
+endif
+
 ifeq ($(TARGET), HOST)
     CC = $(CC_HOST)
+    BUILD_DIR = $(BUILD_DIR_HOST)
     CFLAGS = $(CFLAGS_COMMON) -DPLATFORM_HOST
     LDFLAGS = $(LDFLAGS_COMMON) -lglfw -lGL -lm
     SRCS = main.c platform/host/platform.c particles/particles.c
 else ifeq ($(TARGET), EMBEDDED)
-    # RP2040-specific build
-    ifndef PICO_SDK_PATH
-        $(error PICO_SDK_PATH is not set. Please export PICO_SDK_PATH to the Pico SDK path.)
-    endif
     CROSS_COMPILE = arm-none-eabi-
-    BUILD_DIR = platform/embedded/build
+    BUILD_DIR = $(BUILD_DIR_EMBEDDED)
     ELF_FILE = $(BUILD_DIR)/particles.elf
     BIN_FILE = $(BUILD_DIR)/particles.bin  # .bin extension for flashing
+    SRCS = platform/embedded/main.c platform/embedded/platform.c particles/particles.c
 else
     $(error Unknown target '$(TARGET)'. Supported targets: HOST, EMBEDDED)
 endif
 
-# Object files
-OBJS = $(SRCS:.c=.o)
+# Object and dependency files in build directory
+OBJS = $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRCS))
+DEPS = $(OBJS:.o=.d)
 
 # Output binary
-OUTPUT = particles_$(TARGET)
+OUTPUT = $(BUILD_DIR)/particles_$(TARGET)
 
 # Quiet mode
 VERBOSE ?= 1
@@ -52,20 +68,22 @@ all: $(OUTPUT)
 # HOST target build
 ifeq ($(TARGET), HOST)
 $(OUTPUT): $(OBJS)
+	@mkdir -p $(BUILD_DIR)
 	$(Q)$(CC) $(OBJS) -o $(OUTPUT) $(LDFLAGS)
 
--include $(SRCS:.c=.d)
+-include $(DEPS)
 
-%.o: %.c
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
 	$(Q)$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 # EMBEDDED target build
 else ifeq ($(TARGET), EMBEDDED)
 $(OUTPUT):
 	$(Q)mkdir -p $(BUILD_DIR)
-	$(Q)cd $(BUILD_DIR) && cmake -DPICO_SDK_PATH=$(PICO_SDK_PATH) -DPICO_BOARD=pico_w ..
+	$(Q)cd $(BUILD_DIR) && cmake -DPICO_SDK_PATH=$(abspath $(PICO_SDK_PATH)) -DPICO_BOARD=pico_w ..
 	$(Q)cd $(BUILD_DIR) && $(MAKE)
-	$(Q)$(CROSS_COMPILE)objcopy -O binary $(ELF_FILE) $(BIN_FILE)  # Convert ELF to BIN
+	$(Q)$(CROSS_COMPILE)objcopy -O binary $(ELF_FILE) $(BIN_FILE)
 	$(Q)cp $(BIN_FILE) $(OUTPUT)
 endif
 
@@ -77,11 +95,10 @@ run: $(OUTPUT)
 ifeq ($(TARGET), HOST)
 	$(Q)./$(OUTPUT)
 else
-	$(error 'run' is only supported for HOST target.)
+	$(Q)picotool reboot
 endif
 
 clean:
-	$(Q)rm -rf $(BUILD_DIR)
-	$(Q)rm -f $(OUTPUT) $(OBJS) $(SRCS:.c=.d)
+	$(Q)rm -rf $(BUILD_DIR_HOST) $(BUILD_DIR_EMBEDDED)
 
 .PHONY: all clean run flash

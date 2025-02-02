@@ -25,6 +25,9 @@ static int addr = 0x68;
 #define MPU6050_I2C_SDA_PIN    16      // GP16 for SDA
 #define MPU6050_I2C_SCL_PIN    17      // GP17 for SCL
 
+#define BUFFER_SIZE             6
+#define ACCEL_SIZE              3
+
 static void mpu6050_reset() {
     // Two byte reset. First byte register, second byte data
     // There are a load more options to set up the device in different ways that could be added here
@@ -43,7 +46,7 @@ static void mpu6050_read_raw(int16_t accel[3]) {
     // first, then subsequently read from the device. The register is auto incrementing
     // so we don't need to keep sending the register we want, just the first.
 
-    uint8_t buffer[2];
+    uint8_t buffer[3 * 2]; // 3 16-bit values
 
     // Start reading acceleration registers from register 0x3B for 6 bytes
     uint8_t val = 0x3B;

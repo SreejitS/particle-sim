@@ -1,3 +1,6 @@
+#ifndef MPU6050_H
+#define MPU6050_H
+
 /**
  * @file mpu6050.h
  * @brief Header file for MPU6050 IMU functions.
@@ -15,7 +18,7 @@
  *
  * @return int Returns 0 on success, or a negative error code on failure.
  */
-int imu_init();
+int mpu6050_init();
 
 /**
  * @brief Read data from the IMU.
@@ -26,4 +29,6 @@ int imu_init();
  * @param[out] y Pointer to a float where the Y-axis data will be stored.
  * @return int Returns 0 on success, or a negative error code on failure.
  */
-int imu_read(float *x, float *y);
+int mpu6050_read(float *x, float *y);
+
+#endif // MPU6050_H

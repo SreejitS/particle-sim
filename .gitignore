@@ -1,12 +1,24 @@
-*/*.o
-*/*.d
-**/build/**
-platform/embedded/build
+# Ignore all object and dependency files
+*.o
+*.d
+
+# Ignore all build directories
+**/build/
+
+# Ignore compiled binaries
 particles_EMBEDDED
 particles_HOST
+
+# Ignore Pico SDK (assumed to be an external dependency)
+platform/embedded/pico-sdk/
+
+# Ignore Pico tool artifacts
 platform/embedded/picotool/
+
+# Ignore VS Code workspace settings
 .vscode/
-main.d
-main.o
-platform/host/platform.d
-platform/host/platform.o
+
+# Ignore CMake build artifacts (if any)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
