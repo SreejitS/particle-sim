@@ -25,9 +25,6 @@ static int addr = 0x68;
 #define MPU6050_I2C_SDA_PIN    16      // GP16 for SDA
 #define MPU6050_I2C_SCL_PIN    17      // GP17 for SCL
 
-#define BUFFER_SIZE             6
-#define ACCEL_SIZE              3
-
 static void mpu6050_reset() {
     // Two byte reset. First byte register, second byte data
     // There are a load more options to set up the device in different ways that could be added here
@@ -42,21 +39,28 @@ static void mpu6050_reset() {
 }
 
 static void mpu6050_read_raw(int16_t accel[3]) {
-    // For this particular device, we send the device the register we want to read
-    // first, then subsequently read from the device. The register is auto incrementing
-    // so we don't need to keep sending the register we want, just the first.
+    // Buffer to hold raw data from the MPU6050
+    uint8_t buffer[6];
 
-    uint8_t buffer[3 * 2]; // 3 16-bit values
+    // Register to read from (0x3B for accelerometer data)
+    uint8_t reg = 0x3B;
 
-    // Start reading acceleration registers from register 0x3B for 6 bytes
-    uint8_t val = 0x3B;
-    i2c_write_blocking(i2c0, addr, &val, 1, true); // true to keep master control of bus
-    i2c_read_blocking(i2c0, addr, buffer, 6, false);
-
-    for (int i = 0; i < 3; i++) {
-        accel[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);
+    // Write the register address to the MPU6050
+    if (i2c_write_blocking(i2c0, addr, &reg, 1, true) != 1) {
+        // Handle I2C write error
+        return;
     }
 
+    // Read 6 bytes of data from the MPU6050 (2 bytes per axis: X, Y, Z)
+    if (i2c_read_blocking(i2c0, addr, buffer, 6, false) != 6) {
+        // Handle I2C read error
+        return;
+    }
+
+    // Convert raw data to 16-bit signed integers
+    for (int i = 0; i < 3; i++) {
+        accel[i] = (int16_t)((buffer[i * 2] << 8) | buffer[(i * 2) + 1]);
+    }
 }
 
 int mpu6050_init() {

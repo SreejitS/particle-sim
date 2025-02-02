@@ -95,7 +95,7 @@ run: $(OUTPUT)
 ifeq ($(TARGET), HOST)
 	$(Q)./$(OUTPUT)
 else
-	$(Q)picotool reboot
+	$(Q)pyocd reset -t rp2040
 endif
 
 clean:

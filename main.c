@@ -12,7 +12,7 @@ int main() {
     }
 
     // Create an array of NUM_OF_PARTICLES particles
-    Particle particles[NUM_OF_PARTICLES];
+    static Particle particles[NUM_OF_PARTICLES];
     for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
         particle_init(&particles[i]);
     }
