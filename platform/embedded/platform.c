@@ -6,6 +6,7 @@
 #include "pico/stdlib.h"
 
 bool platform_init() {
+    stdio_init_all(); // Initializes all available stdio (USB + UART)
     display_init();
     srand( get_rand_32() );
     imu_init();
@@ -24,6 +25,7 @@ void platform_draw_particle(Particle* p) {
 }
 
 void platform_update_global_acceleration(float *ax, float *ay) {
+    // printf("%f %f\n", *ax, *ay);
     imu_read(ax, ay);
 }
 

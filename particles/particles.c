@@ -1,4 +1,6 @@
 #include "particles.h"
+#include <stdlib.h>  // For rand()
+#include <math.h>    // For float operations
 
 void particle_init(Particle* p) {
     p->x = (float)(rand() % 200 - 100) / 100.0f; // Random x between -1.0 and 1.0
@@ -10,6 +12,8 @@ void particle_init(Particle* p) {
     p->radius = 0.05f; // Fixed radius for all particles
 }
 
+#define NOISE_SCALE 1e-4f  // Small random perturbation
+
 void particle_update(Particle* p, float dt) {
     // Update velocity using acceleration
     p->vx += p->ax * dt;
@@ -19,14 +23,27 @@ void particle_update(Particle* p, float dt) {
     p->x += p->vx * dt;
     p->y += p->vy * dt;
 
-    // Reflective boundary conditions
-    if (p->x > 1.0f - p->radius || p->x < -1.0f + p->radius) {
+    // Generate small random noise
+    float noise_x = ((rand() / (float)RAND_MAX) * 2.0f - 1.0f) * NOISE_SCALE;
+    float noise_y = ((rand() / (float)RAND_MAX) * 2.0f - 1.0f) * NOISE_SCALE;
+
+    // Reflective boundary conditions with noise
+    if (p->x > 1.0f - p->radius) {
         p->vx = -p->vx;
-        p->x = (p->x > 1.0f - p->radius) ? (1.0f - p->radius) : (-1.0f + p->radius);
+        p->x = 1.0f - p->radius + noise_x;
+    } 
+    if (p->x < -1.0f + p->radius) {
+        p->vx = -p->vx;
+        p->x = -1.0f + p->radius + noise_x;
     }
-    if (p->y > 1.0f - p->radius || p->y < -1.0f + p->radius) {
+    
+    if (p->y > 1.0f - p->radius) {
         p->vy = -p->vy;
-        p->y = (p->y > 1.0f - p->radius) ? (1.0f - p->radius) : (-1.0f + p->radius);
+        p->y = 1.0f - p->radius + noise_y;
+    } 
+    if (p->y < -1.0f + p->radius) {
+        p->vy = -p->vy;
+        p->y = -1.0f + p->radius + noise_y;
     }
 }
 

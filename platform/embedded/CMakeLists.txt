@@ -24,7 +24,7 @@ target_include_directories(particles PRIVATE
     
 )
 
-pico_enable_stdio_usb(particles 1)
 pico_enable_stdio_uart(particles 1)
+pico_enable_stdio_usb(particles 0)
 pico_add_extra_outputs(particles)
 target_link_libraries(particles pico_stdlib hardware_i2c pico_rand)

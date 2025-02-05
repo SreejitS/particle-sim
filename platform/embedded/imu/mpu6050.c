@@ -82,8 +82,7 @@ int mpu6050_read(float *x, float *y) {
     mpu6050_read_raw(accel);
 
     // convert to -1.0 to 1.0 range
-    *y = (float)accel[0] / 4098.0f;
-    *x = (float)accel[1] / 4098.0f;
+    *y = (float)accel[0] / 2048.0f;
+    *x = (float)accel[1] / 2048.0f;
 
-    
 }

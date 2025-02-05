@@ -25,9 +25,9 @@ int main() {
         platform_update_global_acceleration(&ax, &ay);
         
         // Update particles with the global acceleration
-        float time = platform_get_time();
-        static float lastTime = 0.0f;
-        float deltaTime = time - lastTime;
+        double time = platform_get_time();
+        static double lastTime = 0.0f;
+        double deltaTime = time - lastTime;
         lastTime = time;
 
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
@@ -39,7 +39,7 @@ int main() {
             particle_update(&particles[i], deltaTime);
         }
 
-        float restitution = 0.8f; // Set restitution to 0.8 for some energy loss
+        float restitution = 0.5f; // Set restitution to 0.8 for some energy loss
 
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
             for (int j = i + 1; j < NUM_OF_PARTICLES; ++j) {
@@ -52,6 +52,8 @@ int main() {
         for (int i = 0; i < NUM_OF_PARTICLES; ++i) {
             platform_draw_particle(&particles[i]);
         }
+
+        printf("%f %f\n",particles[0].x, particles[0].y);
 
         platform_update_display();
         platform_poll_events();
