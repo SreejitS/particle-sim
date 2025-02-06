@@ -53,8 +53,6 @@ int main() {
             platform_draw_particle(&particles[i]);
         }
 
-        printf("%f %f\n",particles[0].x, particles[0].y);
-
         platform_update_display();
         platform_poll_events();
     }

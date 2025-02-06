@@ -11,16 +11,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         switch (key) {
             case GLFW_KEY_RIGHT:
-                printf("Right Arrow Key Pressed - Positive X Acceleration\n");
                 break;
             case GLFW_KEY_LEFT:
-                printf("Left Arrow Key Pressed - Negative X Acceleration\n");
                 break;
             case GLFW_KEY_UP:
-                printf("Up Arrow Key Pressed - Positive Y Acceleration\n");
                 break;
             case GLFW_KEY_DOWN:
-                printf("Down Arrow Key Pressed - Negative Y Acceleration\n");
                 break;
             default:
                 break;
@@ -34,7 +30,7 @@ bool platform_init() {
         return false;
     }
 
-    window = glfwCreateWindow(800, 600, "Particle Simulation with Collisions", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "Particle Simulation with Collisions [*Press Arrow Keys*]", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to open GLFW window\n");
         glfwTerminate();
