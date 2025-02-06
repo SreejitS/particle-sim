@@ -59,50 +59,7 @@ This project demonstrates how application logic can be implemented on a host mac
 ## Application Logic
 
 ### Host Machine
-The application logic is implemented in a platform-independent manner. For example, the main application logic is contained in `main.c`:
-```c
-```c
-#include "application.h"
-
-int main() {
-    // Initialize the application
-    app_init();
-
-    // Main loop
-    while (1) {
-        // Run the application logic
-        app_run();
-    }
-
-    return 0;
-}
-```
+The particle simulation logic is implemented in a platform-independent manner. For example, the main simulation logic is contained in `particles.c`, `particles.h`, and `main.c`. The platform-specific details are handled in `platform/host/platform.c`.
 
 ### RP Pico 2040
-The same application logic is adapted for the RP Pico 2040 with MPU6050 and SSD1306 OLED display. The platform-specific details are handled in `platform/embedded/platform.c`:
-```c
-```c
-#include "platform.h"
-#include "mpu6050.h"
-#include "ssd1306.h"
-
-void platform_init() {
-    // Initialize I2C for MPU6050 and SSD1306
-    i2c_init();
-
-    // Initialize MPU6050 sensor
-    mpu6050_init();
-
-    // Initialize SSD1306 display
-    ssd1306_init();
-}
-
-void platform_run() {
-    // Read data from MPU6050
-    mpu6050_data_t data;
-    mpu6050_read(&data);
-
-    // Display data on SSD1306
-    ssd1306_display(data);
-}
-```
+The same particle simulation logic is adapted for the RP Pico 2040 with MPU6050 and SSD1306 OLED display. The platform-specific details are handled in `platform/embedded/platform.c`.
