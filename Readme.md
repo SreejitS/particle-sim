@@ -48,6 +48,13 @@ This project demonstrates how application logic can be implemented on a host mac
     ```sh
     make flash TARGET=EMBEDDED
     ```
+    ### Demo
+
+    #### Host Machine
+    ![Particle Sim Host Demo](particle-sim-host.gif)
+
+    #### Embedded Target
+    ![Particle Sim Host Demo](particle-sim-embedded.gif)
 
 ## Application Logic
 

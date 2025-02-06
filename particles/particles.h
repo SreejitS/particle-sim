@@ -8,7 +8,7 @@
  * @def NUM_OF_PARTICLES
  * Number of particles in the simulation.
  */
-#define NUM_OF_PARTICLES 80
+#define NUM_OF_PARTICLES 100
 
 /**
  * @struct Particle

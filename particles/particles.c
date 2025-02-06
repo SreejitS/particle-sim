@@ -9,7 +9,7 @@ void particle_init(Particle* p) {
     p->vy = (float)(rand() % 200 - 100) / 100.0f; // Random velocity
     p->ax = 0.0f;  // No acceleration by default
     p->ay = -0.1f; // Gravity-like acceleration
-    p->radius = 0.05f; // Fixed radius for all particles
+    p->radius = 0.01f; // Fixed radius for all particles
 }
 
 #define NOISE_SCALE 1e-4f  // Small random perturbation
