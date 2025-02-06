@@ -1,5 +1,11 @@
 # Particle-Sim
 
+## Demo
+### Embedded Target
+![Particle Sim Host Demo](particle-sim-embedded.gif)
+### Host Machine
+![Particle Sim Host Demo](particle-sim-host.gif)
+
 ## Overview
 This project demonstrates how application logic can be implemented on a host machine and then ported to an RP Pico 2040 with MPU6050 and SSD1306 OLED display with minimal changes to platform-specific details.
 
@@ -48,13 +54,7 @@ This project demonstrates how application logic can be implemented on a host mac
     ```sh
     make flash TARGET=EMBEDDED
     ```
-    ### Demo
 
-    #### Host Machine
-    ![Particle Sim Host Demo](particle-sim-host.gif)
-
-    #### Embedded Target
-    ![Particle Sim Host Demo](particle-sim-embedded.gif)
 
 ## Application Logic
 
